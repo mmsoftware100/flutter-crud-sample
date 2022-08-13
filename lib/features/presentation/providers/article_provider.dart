@@ -86,7 +86,9 @@ class ArticleProvider extends ChangeNotifier {
           String str = sharedPreferences.getString(articleUpdate.id.toString()) ?? "";
           Map<String, dynamic> json = jsonDecode(str);
           json['favourite'] = articles[i].favourite;
-          sharedPreferences.setString(articleUpdate.id.toString(), jsonEncode(json));
+          print(json['title']);
+          print(json['favourite']);
+          await sharedPreferences.setString(articleUpdate.id.toString(), jsonEncode(json));
         }
         catch(exp,stackTrace){
           print("ArticleProvider->toggleFavourite");
@@ -101,9 +103,6 @@ class ArticleProvider extends ChangeNotifier {
       }
     }
 
-    print("updating current article");
-    article.favourite = articleUpdate.favourite ? false : true;
-    print("ArticleProvider->toggleFavourite for id ${article.id} ${article.favourite}");
     notifyListeners();
     return status;
   }

@@ -41,9 +41,13 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         title: Text(Provider.of<ArticleProvider>(context, listen: true).article.title, overflow: TextOverflow.ellipsis,),
         actions: [
           IconButton(
-              onPressed: (){
+              onPressed: ()async{
                 print("ArticleDetailPage->toggleFavourite");
-                Provider.of<ArticleProvider>(context, listen: false).toggleFavourite(Provider.of<ArticleProvider>(context, listen: false).article);
+                bool status = await Provider.of<ArticleProvider>(context, listen: false).toggleFavourite(Provider.of<ArticleProvider>(context, listen: false).article);
+                print(status);
+                setState(() {
+
+                });
               },
               icon: Provider.of<ArticleProvider>(context, listen: true).article.favourite ? Icon(Icons.favorite, color: Colors.red,) :  Icon(Icons.favorite_border, color: Colors.red)
           )
