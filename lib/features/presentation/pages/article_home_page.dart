@@ -48,6 +48,7 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
     _loadOffline();
   }
   void _loadOffline()async{
+    print("ArticleHomePage->_loadOffline");
     await Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
   }
   @override
