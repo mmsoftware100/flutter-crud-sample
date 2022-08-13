@@ -31,7 +31,7 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
 
   void _refresh() async{
     Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
-    //Provider.of<ArticleProvider>(context, listen: false).loadOnlineArticles();
+    Provider.of<ArticleProvider>(context, listen: false).loadOnlineArticles();
   }
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
 
 
   Widget _articleList(List<Article> articles){
-    if(articles.isEmpty) return Center(child: Text("No Articles Available"),);
+    if(articles.isEmpty) return _noArticleWidget();
     return ListView.separated(
         physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) => _articleThumbnail(articles[index]),
@@ -62,6 +62,18 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
     );
   }
 
+  Widget _noArticleWidget(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(width: MediaQuery.of(context).size.width,),
+        Text("No Articles Available"),
+        SizedBox(height: 20,),
+        _fab()
+      ],
+    );
+  }
   Widget _articleThumbnail(Article article){
     return InkWell(
       onTap: (){

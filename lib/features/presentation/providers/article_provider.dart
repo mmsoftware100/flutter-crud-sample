@@ -116,9 +116,20 @@ class ArticleProvider extends ChangeNotifier {
     //DateTime lastSyncTimeLocal = DateTime.tryParse(lastSyncTimeStringLocal) ?? DateTime.now();
 
     try{
-      for(int i=1; i <= 50; i++){
-        await _getArticleByIdFromRemote(i);
+      Config config = await _shouldSync();
+      int numberOfPost = sharedPreferences.getInt(NUMBER_OF_ARTICLE) ?? 0;
+      String lastUpdateTimeStr = sharedPreferences.getString(LAST_SYNC_TIME) ?? DateTime.now().toString();
+      DateTime lastUpdateTime = DateTime.tryParse(lastUpdateTimeStr) ?? DateTime.now();
+
+      if(config.lastUpdatedTime.isAfter(lastUpdateTime) || config.numberOfPost != numberOfPost){
+        for(int i=1; i <= config.numberOfPost; i++){
+          await _getArticleByIdFromRemote(i);
+        }
       }
+
+      await sharedPreferences.setInt(NUMBER_OF_ARTICLE, config.numberOfPost);
+      await sharedPreferences.setString(LAST_SYNC_TIME, config.lastUpdatedTime.toString());
+
       notifyListeners();
 
 
@@ -201,8 +212,41 @@ class ArticleProvider extends ChangeNotifier {
     }
   }
 
+  // get number of post and sync datetime
+  Future<Config> _shouldSync()async{
+    try{
+      print("ArticleProvider->_shouldSync endpoint is $CONFIG_ENDPOINT");
+      final response = await client.get(CONFIG_ENDPOINT);
+      print("ArticleProvider->_shouldSync for id $id response");
+      //print(response);
+      print('Response status: ${response.statusCode}');
+      //print('Response data: ${response.data}');
+
+      Map<String, dynamic> dataResponse = response.data; // article json
+      // print(dataResponse);
+      // store / update to shared preference
+      // update repo
+      int numberOfPost = dataResponse['number_of_post'] ?? 50; // TODO: remove
+      DateTime lastUpdatedTime = dataResponse['last_updated_time'] ?? DateTime.now(); // TODO: remove
+      Config config = Config(numberOfPost: numberOfPost, lastUpdatedTime: lastUpdatedTime);
+      return config;
+    }
+    catch(exp, stackTrace){
+      print("ArticleProvider->_shouldSync throw exception");
+      print(exp);
+      print(stackTrace);
+      rethrow;
+    }
+  }
+
   /*
   String data = await DefaultAssetBundle.of(context).loadString("assets/data.json");
   final jsonResult = jsonDecode(data); //latest Dart
    */
+}
+
+class Config{
+  int numberOfPost;
+  DateTime lastUpdatedTime;
+  Config({required this.numberOfPost, required this.lastUpdatedTime});
 }
