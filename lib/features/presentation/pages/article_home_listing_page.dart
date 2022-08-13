@@ -13,7 +13,7 @@ import '../../domain/entities/article.dart';
 
 
 class ArticleHomeListingPage extends StatefulWidget {
-  static String routeName = "/ArticleHomePage";
+  static String routeName = "/ArticleHomeListingPage";
   const ArticleHomeListingPage({Key? key}) : super(key: key);
 
   @override
