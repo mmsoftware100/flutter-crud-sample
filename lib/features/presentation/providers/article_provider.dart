@@ -70,9 +70,11 @@ class ArticleProvider extends ChangeNotifier {
   Future<bool> toggleFavourite(Article articleUpdate) async{
     // find and update in local storage
     bool status = true;
-    print("ArticleProvider->toggleFavourite for id ${articleUpdate.id} ${articleUpdate.favourite}");
+    print("ArticleProvider->toggleFavourite START id ${articleUpdate.id} ${articleUpdate.favourite}");
+    print("updating at data repo"); //")
     for(int i=0; i< articles.length; i++){
       if(articles[i].id == articleUpdate.id){
+        print("FOUND");
         // add = false;
         // need to update
         articles[i].favourite = !articles[i].favourite;
@@ -80,6 +82,7 @@ class ArticleProvider extends ChangeNotifier {
         //dataResponse['favourite'] = articles[i].favourite;
         try{
 
+          print("updating shared preference");
           String str = sharedPreferences.getString(articleUpdate.id.toString()) ?? "";
           Map<String, dynamic> json = jsonDecode(str);
           json['favourite'] = articles[i].favourite;
@@ -98,6 +101,7 @@ class ArticleProvider extends ChangeNotifier {
       }
     }
 
+    print("updating current article");
     article.favourite = articleUpdate.favourite ? false : true;
     print("ArticleProvider->toggleFavourite for id ${article.id} ${article.favourite}");
     notifyListeners();
