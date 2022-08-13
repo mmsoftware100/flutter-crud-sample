@@ -37,6 +37,16 @@ class ArticleProvider extends ChangeNotifier {
   Article article = Article.sample;
   Category category = Category.sample;
 
+
+  List<Article> getFavouriteArticles(){
+    List<Article> favouriteArticles = [];
+    articles.forEach((element) {
+      if(element.favourite){
+        favouriteArticles.add(element);
+      }
+    });
+    return favouriteArticles;
+  }
   void setArticle(Article articleUpdate){
     article = articleUpdate;
     notifyListeners();
@@ -60,7 +70,37 @@ class ArticleProvider extends ChangeNotifier {
   Future<bool> toggleFavourite(Article articleUpdate) async{
     // find and update in local storage
     bool status = true;
+    print("ArticleProvider->toggleFavourite for id ${articleUpdate.id} ${articleUpdate.favourite}");
+    for(int i=0; i< articles.length; i++){
+      if(articles[i].id == articleUpdate.id){
+        // add = false;
+        // need to update
+        articles[i].favourite = !articles[i].favourite;
+        // articleUpdate.favourite = articles[i].favourite; // we just need to keep favourite local data
+        //dataResponse['favourite'] = articles[i].favourite;
+        try{
 
+          String str = sharedPreferences.getString(articleUpdate.id.toString()) ?? "";
+          Map<String, dynamic> json = jsonDecode(str);
+          json['favourite'] = articles[i].favourite;
+          sharedPreferences.setString(articleUpdate.id.toString(), jsonEncode(json));
+        }
+        catch(exp,stackTrace){
+          print("ArticleProvider->toggleFavourite");
+          print(exp);
+          print(stackTrace);
+        }
+
+        //sharedPreferences.setString(dataResponse["id"].toString(), jsonEncode(dataResponse));
+        // articles[i] = articleUpdate;
+        // stop here
+        //return;
+      }
+    }
+
+    article.favourite = articleUpdate.favourite ? false : true;
+    print("ArticleProvider->toggleFavourite for id ${article.id} ${article.favourite}");
+    notifyListeners();
     return status;
   }
 
@@ -105,6 +145,7 @@ class ArticleProvider extends ChangeNotifier {
     }
 
      */
+    articles.shuffle();
     notifyListeners();
     return true;
   }

@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:base/features/presentation/pages/article_category_page.dart';
 import 'package:base/features/presentation/pages/article_detail_page.dart';
+import 'package:base/features/presentation/pages/article_favourite_page.dart';
+import 'package:base/features/presentation/pages/article_home_listing_page.dart';
 import 'package:base/features/presentation/pages/article_home_page.dart';
 import 'package:base/features/presentation/pages/binance/binance_bet_amount_page.dart';
 import 'package:base/features/presentation/pages/binance/binance_bet_confirm_page.dart';
@@ -87,7 +90,13 @@ class MyApp extends StatelessWidget {
       initialRoute: ArticleHomePage.routeName,
       routes: {
         ArticleHomePage.routeName : (context) => ArticleHomePage(),
+        ArticleHomeListingPage.routeName : (context) => ArticleHomeListingPage(),
+        ArticleCategoryPage.routeName : (context) => ArticleCategoryPage(),
+        ArticleFavouritePage.routeName : (context) => ArticleFavouritePage(),
         ArticleDetailPage.routeName : (context) => ArticleDetailPage(),
+        ArticleFavouritePage.routeName : (context) => ArticleFavouritePage(),
+
+
         BinanceHomePage.routeName : (context) => BinanceHomePage(),
         BinanceBetAmountPage.routeName : (context) => BinanceBetAmountPage(),
         BinanceBetConfirmPage.routeName : (context) => BinanceBetConfirmPage(),

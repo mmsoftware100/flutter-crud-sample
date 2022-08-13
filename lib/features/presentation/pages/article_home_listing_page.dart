@@ -1,11 +1,7 @@
 import 'package:base/features/data/const/data.dart';
 import 'package:base/features/presentation/components/our_text_input.dart';
 import 'package:base/features/presentation/components/submit_button.dart';
-import 'package:base/features/presentation/pages/article_about_page.dart';
-import 'package:base/features/presentation/pages/article_category_page.dart';
 import 'package:base/features/presentation/pages/article_detail_page.dart';
-import 'package:base/features/presentation/pages/article_favourite_page.dart';
-import 'package:base/features/presentation/pages/article_home_listing_page.dart';
 import 'package:base/features/presentation/pages/binance/binance_bet_confirm_page.dart';
 import 'package:base/features/presentation/providers/article_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,81 +12,15 @@ import 'package:provider/provider.dart';
 import '../../domain/entities/article.dart';
 
 
-class ArticleHomePage extends StatefulWidget {
+class ArticleHomeListingPage extends StatefulWidget {
   static String routeName = "/ArticleHomePage";
-  const ArticleHomePage({Key? key}) : super(key: key);
+  const ArticleHomeListingPage({Key? key}) : super(key: key);
 
   @override
-  _ArticleHomePageState createState() => _ArticleHomePageState();
+  _ArticleHomeListingPageState createState() => _ArticleHomeListingPageState();
 }
 
-class _ArticleHomePageState extends State<ArticleHomePage> {
-
-
-  int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    ArticleHomeListingPage(),
-    ArticleFavouritePage(),
-    ArticleCategoryPage(),
-    ArticleAboutPage()
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _loadOffline();
-  }
-  void _loadOffline()async{
-    await Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text(appName),
-      ),
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        unselectedItemColor: Colors.white,
-        selectedItemColor: Colors.white,
-        items:<BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            icon: _selectedIndex == 0 ? Icon(Icons.home) : Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            icon: _selectedIndex == 1 ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-            label: 'Favourite',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            icon: _selectedIndex == 2 ? Icon(Icons.category) : Icon(Icons.category_outlined),
-            label: 'Category',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            icon: _selectedIndex == 3 ? Icon(Icons.person) : Icon(Icons.person_outline),
-            label: 'Account',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        // selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
-    );
-  }
-  /*
+class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
   bool loading = false;
 
   @override
@@ -98,7 +28,7 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
     // TODO: implement initState
     super.initState();
     // _refresh();
-    _loadOffline();
+    // _loadOffline();
   }
 
   void _loadOffline()async{
@@ -198,20 +128,23 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
       child: Container(
         margin: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(color: Colors.white)
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(color: Colors.white)
         ),
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8.0),
-                topRight: Radius.circular(8.0),
-              ),
-              child: CachedNetworkImage(
-                imageUrl : article.photo,
-                placeholder: (context, str) => Image.asset("assets/images/dolors.jpg"),
-                errorWidget: (context, dyn, dyn2) => Image.asset("assets/images/dolors.jpg"), // Icon(Icons.error)
+            Hero(
+              tag: article.id.toString(),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl : article.photo,
+                  placeholder: (context, str) => Image.asset("assets/images/dolors.jpg"),
+                  errorWidget: (context, dyn, dyn2) => Image.asset("assets/images/dolors.jpg"), // Icon(Icons.error)
+                ),
               ),
             ),
             Container(
@@ -224,6 +157,4 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
       ),
     );
   }
-
-   */
 }

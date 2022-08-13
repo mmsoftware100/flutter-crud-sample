@@ -31,14 +31,23 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   void _refresh() async{
 
     //Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
-    Provider.of<ArticleProvider>(context, listen: false).loadOnlineArticles();
+    // Provider.of<ArticleProvider>(context, listen: false).loadOnlineArticles();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(appName,),
-        // title: Text(Provider.of<ArticleProvider>(context, listen: true).article.title, overflow: TextOverflow.ellipsis,),
+        //title: Text(appName,),
+        title: Text(Provider.of<ArticleProvider>(context, listen: true).article.title, overflow: TextOverflow.ellipsis,),
+        actions: [
+          IconButton(
+              onPressed: (){
+                print("ArticleDetailPage->toggleFavourite");
+                Provider.of<ArticleProvider>(context, listen: false).toggleFavourite(Provider.of<ArticleProvider>(context, listen: false).article);
+              },
+              icon: Provider.of<ArticleProvider>(context, listen: true).article.favourite ? Icon(Icons.favorite, color: Colors.red,) :  Icon(Icons.favorite_border, color: Colors.red)
+          )
+        ],
       ),
       //body: SingleChildScrollView(child: _mainWidget()),
       body: _articleDetail(Provider.of<ArticleProvider>(context, listen: true).article),
@@ -54,15 +63,18 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(8.0),
-              topRight: Radius.circular(8.0),
-            ),
-            child: CachedNetworkImage(
-              imageUrl : article.photo,
-              placeholder: (context, str) => Image.asset("assets/images/dolors.jpg"),
-              errorWidget: (context, dyn, dyn2) => Image.asset("assets/images/dolors.jpg"), // Icon(Icons.error)
+          Hero(
+            tag: article.id.toString(),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(8.0),
+                topRight: Radius.circular(8.0),
+              ),
+              child: CachedNetworkImage(
+                imageUrl : article.photo,
+                placeholder: (context, str) => Image.asset("assets/images/dolors.jpg"),
+                errorWidget: (context, dyn, dyn2) => Image.asset("assets/images/dolors.jpg"), // Icon(Icons.error)
+              ),
             ),
           ),
           SizedBox(height: 8.0,),
