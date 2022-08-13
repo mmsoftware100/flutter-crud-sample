@@ -1,0 +1,1 @@
+typedef void CallBackWithString(String? str);
