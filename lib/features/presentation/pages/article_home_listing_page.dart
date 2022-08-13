@@ -81,7 +81,7 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
 
 
   Widget _articleList(List<Article> articles){
-    if(articles.isEmpty && loading == true) return CircularProgressIndicator();
+    if(articles.isEmpty && loading == true) return Center(child: CircularProgressIndicator(color: Colors.white,));
     if(articles.isEmpty) return _noArticleWidget();
     return ListView.separated(
         physics: BouncingScrollPhysics(),
