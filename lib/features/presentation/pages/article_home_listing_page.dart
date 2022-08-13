@@ -80,8 +80,20 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
 
 
 
+  Widget _loadingWidget(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(width: MediaQuery.of(context).size.width,),
+        CircularProgressIndicator(color: Colors.white,),
+        SizedBox(height: 20,),
+        Text("Offline တွင်ဖတ်ရှုနိုင်ရန်အတွက\nစက္ကန့် (၃၀) ခန့် စောင့်ဆိုင်းပေးပါ၊"),
+      ],
+    );
+  }
   Widget _articleList(List<Article> articles){
-    if(articles.isEmpty && loading == true) return Center(child: CircularProgressIndicator(color: Colors.white,));
+    if(articles.isEmpty && loading == true) return _loadingWidget();
     if(articles.isEmpty) return _noArticleWidget();
     return ListView.separated(
         physics: BouncingScrollPhysics(),
@@ -97,7 +109,7 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(width: MediaQuery.of(context).size.width,),
-        Text("No Articles Available"),
+        Text("No Articles Available\n အင်တာနက်ဖွင့်ပြီး Refresh ကို နှိပ်ပါ"),
         SizedBox(height: 20,),
         _fab()
       ],
