@@ -121,13 +121,18 @@ class ArticleProvider extends ChangeNotifier {
       String lastUpdateTimeStr = sharedPreferences.getString(LAST_SYNC_TIME) ?? DateTime.now().toString();
       DateTime lastUpdateTime = DateTime.tryParse(lastUpdateTimeStr) ?? DateTime.now();
 
+      int currentPostNo = 0;
       if(config.lastUpdatedTime.isAfter(lastUpdateTime) || config.numberOfPost != numberOfPost){
         for(int i=1; i <= config.numberOfPost; i++){
-          await _getArticleByIdFromRemote(i);
+          bool status = await _getArticleByIdFromRemote(i);
+          if(status){
+            currentPostNo++;
+            print("currentPostNo is $currentPostNo");
+          }
         }
       }
 
-      await sharedPreferences.setInt(NUMBER_OF_ARTICLE, config.numberOfPost);
+      await sharedPreferences.setInt(NUMBER_OF_ARTICLE, currentPostNo);
       await sharedPreferences.setString(LAST_SYNC_TIME, config.lastUpdatedTime.toString());
 
       notifyListeners();
@@ -165,7 +170,7 @@ class ArticleProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _getArticleByIdFromRemote(int id)async{
+  Future<bool> _getArticleByIdFromRemote(int id)async{
     try{
       String endPoint = ARTICLE_ENDPOINT+"/$id.json";
       print("ArticleProvider->_getArticleByIdFromRemote endpoint is $endPoint");
@@ -182,6 +187,7 @@ class ArticleProvider extends ChangeNotifier {
       dataResponse["id"] = id; // TODO: remove
       dataResponse["id"] = PHOTO_ENDPOINT+"/1.png"; // TODO: remove
       _addOrUpdateRepo(ArticleModel.fromJson(dataResponse).toEntity(), dataResponse);
+      return true;
     }
     catch(exp, stackTrace){
       print("LatestNewsRemoteDataSourceImpl->getLatestNews throw exception");

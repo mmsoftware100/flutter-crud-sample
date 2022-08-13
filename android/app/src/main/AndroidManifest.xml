@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mmsoftware100.binance">
+    package="com.mmsoftware100.marriedhealth2">
    <application
         android:label="MMB"
         android:icon="@mipmap/ic_launcher">
