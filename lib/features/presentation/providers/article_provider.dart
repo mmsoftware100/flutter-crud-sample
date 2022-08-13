@@ -64,7 +64,7 @@ class ArticleProvider extends ChangeNotifier {
     return status;
   }
 
-  void loadOfflineArticles()async{
+  Future<bool> loadOfflineArticles()async{
     // get number of itmes
     print("ArticleProvider->loadOfflineArticles");
     //int noOfArticleLocal = 0;
@@ -106,9 +106,10 @@ class ArticleProvider extends ChangeNotifier {
 
      */
     notifyListeners();
+    return true;
   }
 
-  void loadOnlineArticles()async{
+  Future<bool> loadOnlineArticles()async{
     // get number of article and last sync time
     //int noOfArticleLocal = 0;
     //noOfArticleLocal = sharedPreferences.getInt(NUMBER_OF_ARTICLE) ?? 0;
@@ -118,11 +119,13 @@ class ArticleProvider extends ChangeNotifier {
     try{
       Config config = await _shouldSync();
       int numberOfPost = sharedPreferences.getInt(NUMBER_OF_ARTICLE) ?? 0;
-      String lastUpdateTimeStr = sharedPreferences.getString(LAST_SYNC_TIME) ?? DateTime.now().toString();
-      DateTime lastUpdateTime = DateTime.tryParse(lastUpdateTimeStr) ?? DateTime.now();
+      String lastUpdateTime = sharedPreferences.getString(LAST_SYNC_TIME) ?? DateTime.now().toString();
+      // DateTime lastUpdateTime = DateTime.tryParse(lastUpdateTimeStr) ?? DateTime.now();
 
       int currentPostNo = 0;
-      if(config.lastUpdatedTime.isAfter(lastUpdateTime) || config.numberOfPost != numberOfPost){
+      print("ArticleProvider->loadOnlineArticles numberOfPost $numberOfPost updated at $lastUpdateTime");
+      print(config.numberOfPost.toString() + " , " +config.lastUpdatedTime);
+      if(config.lastUpdatedTime != lastUpdateTime || config.numberOfPost != numberOfPost){
         for(int i=1; i <= config.numberOfPost; i++){
           bool status = await _getArticleByIdFromRemote(i);
           if(status){
@@ -130,13 +133,17 @@ class ArticleProvider extends ChangeNotifier {
             print("currentPostNo is $currentPostNo");
           }
         }
+        await sharedPreferences.setInt(NUMBER_OF_ARTICLE, currentPostNo);
+        await sharedPreferences.setString(LAST_SYNC_TIME, config.lastUpdatedTime.toString());
+      }
+      else{
+        print("already updated");
       }
 
-      await sharedPreferences.setInt(NUMBER_OF_ARTICLE, currentPostNo);
-      await sharedPreferences.setString(LAST_SYNC_TIME, config.lastUpdatedTime.toString());
 
       notifyListeners();
 
+      return true;
 
       /*
 
@@ -166,7 +173,7 @@ class ArticleProvider extends ChangeNotifier {
       print("LatestNewsRemoteDataSourceImpl->getLatestNews throw exception");
       print(exp);
       print(stackTrace);
-      rethrow;
+      return false;
     }
   }
 
@@ -185,7 +192,7 @@ class ArticleProvider extends ChangeNotifier {
       // store / update to shared preference
       // update repo
       dataResponse["id"] = id; // TODO: remove
-      dataResponse["id"] = PHOTO_ENDPOINT+"/1.png"; // TODO: remove
+      dataResponse["photo"] = PHOTO_ENDPOINT+"/1.png"; // TODO: remove
       _addOrUpdateRepo(ArticleModel.fromJson(dataResponse).toEntity(), dataResponse);
       return true;
     }
@@ -223,17 +230,17 @@ class ArticleProvider extends ChangeNotifier {
     try{
       print("ArticleProvider->_shouldSync endpoint is $CONFIG_ENDPOINT");
       final response = await client.get(CONFIG_ENDPOINT);
-      print("ArticleProvider->_shouldSync for id $id response");
+      print("ArticleProvider->_shouldSync response");
       //print(response);
       print('Response status: ${response.statusCode}');
       //print('Response data: ${response.data}');
 
       Map<String, dynamic> dataResponse = response.data; // article json
-      // print(dataResponse);
+      print(dataResponse);
       // store / update to shared preference
       // update repo
       int numberOfPost = dataResponse['number_of_post'] ?? 50; // TODO: remove
-      DateTime lastUpdatedTime = dataResponse['last_updated_time'] ?? DateTime.now(); // TODO: remove
+      String lastUpdatedTime = dataResponse['last_updated_time'] ?? DateTime.now().toString(); // TODO: remove
       Config config = Config(numberOfPost: numberOfPost, lastUpdatedTime: lastUpdatedTime);
       return config;
     }
@@ -253,6 +260,6 @@ class ArticleProvider extends ChangeNotifier {
 
 class Config{
   int numberOfPost;
-  DateTime lastUpdatedTime;
+  String lastUpdatedTime;
   Config({required this.numberOfPost, required this.lastUpdatedTime});
 }

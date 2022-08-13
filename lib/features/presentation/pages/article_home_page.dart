@@ -21,17 +21,38 @@ class ArticleHomePage extends StatefulWidget {
 }
 
 class _ArticleHomePageState extends State<ArticleHomePage> {
+  bool loading = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // _refresh();
+    _loadOffline();
   }
 
+  void _loadOffline()async{
+    setState(() {
+      loading = true;
+    });
+    await Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
+    Future.delayed(Duration(seconds: 3),(){
+      setState(() {
+        loading = false;
+      });
+    });
+  }
   void _refresh() async{
-    Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
-    Provider.of<ArticleProvider>(context, listen: false).loadOnlineArticles();
+    setState(() {
+      loading = true;
+    });
+    await Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
+    await Provider.of<ArticleProvider>(context, listen: false).loadOnlineArticles();
+    Future.delayed(Duration(seconds: 3),(){
+      setState(() {
+        loading = false;
+      });
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -53,6 +74,7 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
 
 
   Widget _articleList(List<Article> articles){
+    if(articles.isEmpty && loading == true) return CircularProgressIndicator();
     if(articles.isEmpty) return _noArticleWidget();
     return ListView.separated(
         physics: BouncingScrollPhysics(),
@@ -71,6 +93,20 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
         Text("No Articles Available"),
         SizedBox(height: 20,),
         _fab()
+      ],
+    );
+  }
+
+
+  Widget _loadingArticles(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(width: MediaQuery.of(context).size.width,),
+        CircularProgressIndicator(color: Colors.white,),
+        SizedBox(height: 20,),
+        Text("Loading"),
       ],
     );
   }
@@ -104,7 +140,7 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
             Container(
               padding: EdgeInsets.all(8.0),
               margin: EdgeInsets.all(8.0),
-              child: Text(article.id.toString() +" "+ article.title),
+              child: Text(article.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),),
             ),
           ],
         ),
