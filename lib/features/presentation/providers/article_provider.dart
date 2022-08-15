@@ -235,8 +235,8 @@ class ArticleProvider extends ChangeNotifier {
       // print(dataResponse);
       // store / update to shared preference
       // update repo
-      dataResponse["id"] = id; // TODO: remove
-      dataResponse["photo"] = PHOTO_ENDPOINT+"/1.png"; // TODO: remove
+      // dataResponse["id"] = id; // TODO: remove
+      // dataResponse["photo"] = PHOTO_ENDPOINT+"/1.png"; // TODO: remove
       _addOrUpdateRepo(ArticleModel.fromJson(dataResponse).toEntity(), dataResponse);
       return true;
     }
