@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../domain/entities/spt/repeatable_fields.dart';
 
 part 'repeatable_fields_model.g.dart';
 @JsonSerializable(explicitToJson: true)
@@ -24,9 +23,6 @@ class RepeatableFieldsModel {
     required this.url
   });
 
-  RepeatableFields toEntity(){
-    return RepeatableFields(name: name, select: select, idioma: idioma, url: url);
-  }
 
   factory RepeatableFieldsModel.fromJson(Map<String, dynamic> json) =>  _$RepeatableFieldsModelFromJson(json);
 

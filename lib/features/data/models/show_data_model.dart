@@ -1,6 +1,5 @@
 
 import 'package:base/features/data/models/repeatable_fields_model.dart';
-import 'package:base/features/domain/entities/spt/show_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'downloads_model.dart';
@@ -32,16 +31,6 @@ class ShowDataModel {
     required this.repeatableFields
   });
 
-
-  ShowData toEntity(){
-    return ShowData(
-        serie: serie,
-        temporada: temporada,
-        episodio: episodio,
-        downloads: downloads.map((e) => e.toEntity()).toList(),
-        repeatableFields: repeatableFields.map((e) => e.toEntity()).toList()
-    );
-  }
 
   factory ShowDataModel.fromJson(Map<String, dynamic> json) =>  _$ShowDataModelFromJson(json);
 

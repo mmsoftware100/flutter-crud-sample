@@ -3,26 +3,15 @@
 import 'dart:convert';
 import 'dart:core';
 
-import 'package:base/core/error/failures.dart';
 import 'package:base/features/data/const/data.dart';
 import 'package:base/features/data/models/article_model.dart';
 import 'package:base/features/data/models/category_model.dart';
 import 'package:base/features/domain/entities/article.dart';
-import 'package:base/features/domain/entities/latest_news.dart';
-import 'package:base/features/domain/entities/spt/spt_meta_data.dart';
-import 'package:base/features/domain/entities/spt/video.dart';
-import 'package:base/features/domain/entities/user.dart';
-import 'package:base/features/domain/usecases/add_to_favourite.dart';
-import 'package:base/features/domain/usecases/get_latest_news.dart';
-import 'package:base/features/domain/usecases/get_video_list.dart';
-import 'package:base/features/domain/usecases/user_register.dart';
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/category.dart';
-import '../../domain/usecases/user_login.dart';
 class ArticleProvider extends ChangeNotifier {
   final SharedPreferences sharedPreferences;
   final Dio client;
@@ -270,6 +259,19 @@ class ArticleProvider extends ChangeNotifier {
     }
   }
 
+  void addOrUpdateCategory(Category category){
+    bool insert = true;
+    for(int i=0; i < categories.length; i++){
+      if(categories[i].id == category.id){
+        categories[i] = category;
+        insert = false;
+      }
+    }
+    if(insert){
+      categories.add(category);
+    }
+  }
+
   // get number of post and sync datetime
   Future<Config> _shouldSync()async{
     try{
@@ -302,8 +304,8 @@ class ArticleProvider extends ChangeNotifier {
   final jsonResult = jsonDecode(data); //latest Dart
    */
 
-  // get categories
-  Future<bool> getCategories()async{
+  // load local categories
+  Future<bool> loadLocalCategories()async{
     // load from local
 
     // load from remote
@@ -332,6 +334,42 @@ class ArticleProvider extends ChangeNotifier {
         print(stackTrace);
       }
     });
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> loadRemoteCategories()async{
+    try{
+      print("ArticleProvider->loadRemoteCategories endpoint is $CATEGORY_ENDPOINT");
+      final response = await client.get(CATEGORY_ENDPOINT);
+      print("ArticleProvider->loadRemoteCategories response");
+      //print(response);
+      print('Response status: ${response.statusCode}');
+      //print('Response data: ${response.data}');
+
+      List<dynamic> dataList = response.data; // article json
+      print(dataList);
+      for(int i=0; i < dataList.length; i++){
+        // store to shared preference
+        try{
+          Category category = CategoryModel.fromJson(dataList[i]).toEntity();
+          addOrUpdateCategory(category);
+          await sharedPreferences.setString("category_"+dataList[i]["id"].toString(), jsonEncode(dataList[i]));
+        }
+        catch(exp,stackTrace){
+          print("ArticleProvider->getRemoteCategory inner exp");
+          print(exp);
+          print(stackTrace);
+        }
+      }
+    }
+    catch(exp, stackTrace){
+      print("ArticleProvider->_shouldSync throw exception");
+      print(exp);
+      print(stackTrace);
+      rethrow;
+    }
+    notifyListeners();
     return true;
   }
 }

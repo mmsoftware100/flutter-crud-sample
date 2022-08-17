@@ -1,4 +1,4 @@
-import 'package:base/features/domain/entities/spt/downloads.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'downloads_model.g.dart';
@@ -31,9 +31,6 @@ class DownlaodsModel {
     required this.dtViewsCount
   });
 
-  Downloads toEntity(){
-    return Downloads(sDoolUrl: sDoolUrl, sDoolLang: sDoolLang, sDoolSize: sDoolSize, sDoolType: sDoolType, sDoolQuality: sDoolQuality, dtViewsCount: dtViewsCount);
-  }
 
   factory DownlaodsModel.fromJson(Map<String, dynamic> json) =>  _$DownlaodsModelFromJson(json);
 

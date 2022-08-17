@@ -19,12 +19,9 @@ import 'package:base/features/presentation/pages/login_page.dart';
 import 'package:base/features/presentation/pages/register_page.dart';
 import 'package:base/features/presentation/providers/article_provider.dart';
 import 'package:base/features/presentation/providers/binance_provider.dart';
-import 'package:base/features/presentation/providers/latest_news_provider.dart';
-import 'package:base/features/presentation/providers/spt_video_provider.dart';
 import 'package:flutter/material.dart';
 import 'features/data/const/data.dart';
 import 'features/data/themes/spt_theme.dart';
-import 'features/presentation/providers/spt_meta_data_provider.dart';
 import 'features/presentation/providers/ticket_provider.dart';
 import 'features/presentation/providers/user_provider.dart';
 import 'injection_container.dart' as di;
@@ -52,15 +49,6 @@ void main() async{
             ChangeNotifierProvider(create: (_) =>UserProvider(
                 userLogin: di.sl(),
                 userRegister: di.sl()
-            )),
-            ChangeNotifierProvider(create: (_) =>LatestNewsProvider(
-              getLatestNews: di.sl(),
-            )),
-            ChangeNotifierProvider(create: (_) =>SptVideoProvider(
-              getVideoList: di.sl(),
-            )),
-            ChangeNotifierProvider(create: (_) =>SptMetaDataProvider(
-              getMetaDataList: di.sl(),
             )),
             ChangeNotifierProvider(create: (_) =>TicketProvider(
               getTicketList: di.sl(),

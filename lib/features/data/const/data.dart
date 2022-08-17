@@ -1,24 +1,14 @@
 
-
-import 'dart:convert';
-
-import 'package:base/features/data/const/fixtures/movies_list_json.dart';
-import 'package:base/features/data/models/video_model.dart';
 import 'package:base/features/domain/entities/binance/bet_type.dart';
 import 'package:base/features/domain/entities/binance/quick_select.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-
 import '../../domain/entities/binance/bet_time.dart';
-import '../../domain/entities/category.dart';
-import '../../domain/entities/spt/spt_meta_data.dart';
-import '../../domain/entities/spt/video.dart';
-import 'fixtures/fixture_reader.dart';
 
 String NUMBER_OF_ARTICLE = "NUMBER_OF_ARTICLE";
 String LAST_SYNC_TIME = "LAST_SYNC_TIME";
 String CONFIG_ENDPOINT = "https://aungkoman.github.io/married-health/config.json";
 String ARTICLE_ENDPOINT = "https://aungkoman.github.io/married-health/posts";
 String PHOTO_ENDPOINT = "https://aungkoman.github.io/married-health/photos/";
+String CATEGORY_ENDPOINT = "https://aungkoman.github.io/married-health/categories.json";
 
 String appName = "Married Health";
 const String appIconUrl = "https://aungkoman.github.io/images/assets/dream_catcher.png"; //"https://i.ibb.co/HhxKg1c/logo.png";
@@ -149,8 +139,8 @@ const String recordApi = apiVersion+'/ppd/records-api';
 // https://www.moi.gov.mm/release-group-api
 // https://www.moi.gov.mm/region-minister-table-api
  // https://www.moi.gov.mm/minister-table-api
-
-const Category announcementNewsCategory = Category(id: 2, name: "ကြေညာချက်", photo: announcementNewsEndpoint);
+/*
+const Category announcementNewsCategory = Category(id: 2, name: "ကြေညာချက်", photo: announcementNewsEndpoint, c);
 const Category lawCategory = Category(id: 14, name: "ဥပဒေ", photo: lawApi);
 const Category articleCategory = Category(id: 15, name: "ဆောင်းပါး", photo: articleApi);
 const Category videoCategory = Category(id: 23, name: "ဗီဒီယိုများ", photo: videoNewsEndpoint);
@@ -311,5 +301,7 @@ Future<List<Video>> getSampleVideoListFromFixture(String fileName)async{
     }
   });
   return vidList;
+
 }
+ */
 

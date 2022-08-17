@@ -1,13 +1,8 @@
-import 'package:base/features/data/models/downloads_model.dart';
-import 'package:base/features/data/models/repeatable_fields_model.dart';
-import 'package:base/features/data/models/show_data_model.dart';
-import 'package:base/features/data/models/ticket_status_model.dart';
+
 import 'package:base/features/domain/entities/category.dart';
-import 'package:base/features/domain/entities/dreamcatcher/ticket.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entities/dreamcatcher/ticket_status.dart';
-import '../../domain/entities/spt/video.dart';
 
 part 'category_model.g.dart';
 @JsonSerializable(explicitToJson: true)
@@ -22,14 +17,18 @@ class CategoryModel {
   @JsonKey(name: 'photo', defaultValue: "photo")
   String photo;
 
+  @JsonKey(name: 'count', defaultValue: 0)
+  int count;
+
   CategoryModel({
     required this.id,
     required this.name,
-    required this.photo
+    required this.photo,
+    required this.count
   });
 
   Category toEntity(){
-    return Category(id: id, name: name, photo: photo);
+    return Category(id: id, name: name, photo: photo, count: count);
   }
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) =>  _$CategoryModelFromJson(json);

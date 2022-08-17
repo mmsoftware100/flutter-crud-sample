@@ -1,5 +1,4 @@
 
-import 'package:base/features/domain/entities/spt/spt_meta_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'spt_meta_data_model.g.dart';
@@ -25,10 +24,6 @@ class SptMetaDataModel {
     required this.name
   });
 
-
-  SptMetaData toEntity(){
-    return SptMetaData(termTaxonomyId: termTaxonomyId, taxonomy: taxonomy, termId: termId, name: name);
-  }
 
   factory SptMetaDataModel.fromJson(Map<String, dynamic> json) =>  _$SptMetaDataModelFromJson(json);
 
