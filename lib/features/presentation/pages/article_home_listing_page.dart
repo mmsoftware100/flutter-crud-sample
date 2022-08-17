@@ -88,7 +88,7 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
         Container(width: MediaQuery.of(context).size.width,),
         CircularProgressIndicator(color: Colors.white,),
         SizedBox(height: 20,),
-        Text("Offline တွင်ဖတ်ရှုနိုင်ရန်အတွက\nစက္ကန့် (၃၀) ခန့် စောင့်ဆိုင်းပေးပါ၊"),
+        Text("Offline တွင်ဖတ်ရှုနိုင်ရန်အတွက်\nစက္ကန့် (၃၀) ခန့် စောင့်ဆိုင်းပေးပါ၊"),
       ],
     );
   }

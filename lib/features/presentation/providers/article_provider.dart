@@ -6,6 +6,7 @@ import 'dart:core';
 import 'package:base/core/error/failures.dart';
 import 'package:base/features/data/const/data.dart';
 import 'package:base/features/data/models/article_model.dart';
+import 'package:base/features/data/models/category_model.dart';
 import 'package:base/features/domain/entities/article.dart';
 import 'package:base/features/domain/entities/latest_news.dart';
 import 'package:base/features/domain/entities/spt/spt_meta_data.dart';
@@ -300,6 +301,39 @@ class ArticleProvider extends ChangeNotifier {
   String data = await DefaultAssetBundle.of(context).loadString("assets/data.json");
   final jsonResult = jsonDecode(data); //latest Dart
    */
+
+  // get categories
+  Future<bool> getCategories()async{
+    // load from local
+
+    // load from remote
+
+    // notify listener
+
+    // get number of itmes
+    print("ArticleProvider->loadOfflineArticles");
+    //int noOfArticleLocal = 0;
+    categories.clear();
+    //noOfArticleLocal = sharedPreferences.getInt(NUMBER_OF_ARTICLE) ?? 0;
+    //print(noOfArticleLocal);
+    // TODO: performance issue ရှိနိုင်တယ်။ shared preferences တွေကို တောက်လျှောက် အစအဆုံး ခေါ် ကြည့်နေတာဆိုတော့
+    sharedPreferences.getKeys().forEach((element) {
+      try{
+        String jsonString = sharedPreferences.getString(element.toString()) ?? "";
+        Map<String, dynamic> json = jsonDecode(jsonString);
+        Category newCategory = CategoryModel.fromJson(json).toEntity();
+        print("ArticleProvider->getCategories $element");
+        print(newCategory);
+        categories.add(newCategory);
+      }
+      catch(exp,stackTrace){
+        print("ArticleProvider->getCategories inner exp");
+        print(exp);
+        print(stackTrace);
+      }
+    });
+    return true;
+  }
 }
 
 class Config{
