@@ -50,6 +50,7 @@ class _ArticleHomePageState extends State<ArticleHomePage> {
   void _loadOffline()async{
     print("ArticleHomePage->_loadOffline");
     await Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
+    await Provider.of<ArticleProvider>(context, listen: false).loadOfflineCategories();
   }
   @override
   Widget build(BuildContext context) {

@@ -12,15 +12,15 @@ import 'package:provider/provider.dart';
 import '../../domain/entities/article.dart';
 
 
-class ArticleHomeListingPage extends StatefulWidget {
-  static String routeName = "/ArticleHomeListingPage";
-  const ArticleHomeListingPage({Key? key}) : super(key: key);
+class ArticleListByCategoryPage extends StatefulWidget {
+  static String routeName = "/ArticleListByCategoryPage";
+  const ArticleListByCategoryPage({Key? key}) : super(key: key);
 
   @override
-  _ArticleHomeListingPageState createState() => _ArticleHomeListingPageState();
+  _ArticleListByCategoryPageState createState() => _ArticleListByCategoryPageState();
 }
 
-class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
+class _ArticleListByCategoryPageState extends State<ArticleListByCategoryPage> {
   bool loading = false;
 
   @override
@@ -31,52 +31,26 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
     // _loadOffline();
   }
 
-  void _loadOffline()async{
-    setState(() {
-      loading = true;
-    });
-    await Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
-    Future.delayed(Duration(seconds: 3),(){
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-  void _refresh() async{
-    setState(() {
-      loading = true;
-    });
-    await Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
-    await Provider.of<ArticleProvider>(context, listen: false).loadOnlineArticles();
-    await Provider.of<ArticleProvider>(context, listen: false).loadOfflineCategories();
-    await Provider.of<ArticleProvider>(context, listen: false).loadRemoteCategories();
-    Future.delayed(Duration(seconds: 3),(){
-      setState(() {
-        loading = false;
-      });
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*
-      appBar: AppBar(
-        title: Text(appName),
-      ),
-      */
 
-      body: _articleList(Provider.of<ArticleProvider>(context, listen: true).articles),
-      floatingActionButton: _fab(),
+      appBar: AppBar(
+        title: Text(Provider.of<ArticleProvider>(context, listen: false).category.name),
+      ),
+
+      body: _articleList(Provider.of<ArticleProvider>(context, listen: false).getArticlesByCategory(Provider.of<ArticleProvider>(context, listen: false).category)),
+      // floatingActionButton: _fab(),
     );
   }
 
   Widget _fab(){
     return FloatingActionButton.extended(
         onPressed: (){
-          _refresh();
+          Navigator.pop(context);
         },
         icon: Icon(Icons.refresh),
-        label: Text("Refresh")
+        label: Text("Back")
     );
   }
 
@@ -111,7 +85,7 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(width: MediaQuery.of(context).size.width,),
-        Text("No Articles Available\n အင်တာနက်ဖွင့်ပြီး Refresh ကို နှိပ်ပါ"),
+        Text("No Articles Available\n အခြား Category ကို ရွေးချယ်ပါ"),
         SizedBox(height: 20,),
         _fab()
       ],

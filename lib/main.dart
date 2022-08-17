@@ -5,6 +5,7 @@ import 'package:base/features/presentation/pages/article_detail_page.dart';
 import 'package:base/features/presentation/pages/article_favourite_page.dart';
 import 'package:base/features/presentation/pages/article_home_listing_page.dart';
 import 'package:base/features/presentation/pages/article_home_page.dart';
+import 'package:base/features/presentation/pages/article_list_by_category_page.dart';
 import 'package:base/features/presentation/pages/binance/binance_bet_amount_page.dart';
 import 'package:base/features/presentation/pages/binance/binance_bet_confirm_page.dart';
 import 'package:base/features/presentation/pages/binance/binance_bet_list_page.dart';
@@ -83,6 +84,7 @@ class MyApp extends StatelessWidget {
         ArticleFavouritePage.routeName : (context) => ArticleFavouritePage(),
         ArticleDetailPage.routeName : (context) => ArticleDetailPage(),
         ArticleFavouritePage.routeName : (context) => ArticleFavouritePage(),
+        ArticleListByCategoryPage.routeName : (context) => ArticleListByCategoryPage(),
 
 
         BinanceHomePage.routeName : (context) => BinanceHomePage(),

@@ -305,7 +305,7 @@ class ArticleProvider extends ChangeNotifier {
    */
 
   // load local categories
-  Future<bool> loadLocalCategories()async{
+  Future<bool> loadOfflineCategories()async{
     // load from local
 
     // load from remote
@@ -320,18 +320,21 @@ class ArticleProvider extends ChangeNotifier {
     //print(noOfArticleLocal);
     // TODO: performance issue ရှိနိုင်တယ်။ shared preferences တွေကို တောက်လျှောက် အစအဆုံး ခေါ် ကြည့်နေတာဆိုတော့
     sharedPreferences.getKeys().forEach((element) {
-      try{
-        String jsonString = sharedPreferences.getString(element.toString()) ?? "";
-        Map<String, dynamic> json = jsonDecode(jsonString);
-        Category newCategory = CategoryModel.fromJson(json).toEntity();
-        print("ArticleProvider->getCategories $element");
-        print(newCategory);
-        categories.add(newCategory);
-      }
-      catch(exp,stackTrace){
-        print("ArticleProvider->getCategories inner exp");
-        print(exp);
-        print(stackTrace);
+      if(element.contains("cat_")){
+
+        try{
+          String jsonString = sharedPreferences.getString(element.toString()) ?? "";
+          Map<String, dynamic> json = jsonDecode(jsonString);
+          Category newCategory = CategoryModel.fromJson(json).toEntity();
+          print("ArticleProvider->getCategories $element");
+          print(newCategory);
+          categories.add(newCategory);
+        }
+        catch(exp,stackTrace){
+          print("ArticleProvider->getCategories inner exp");
+          print(exp);
+          print(stackTrace);
+        }
       }
     });
     notifyListeners();
@@ -354,7 +357,7 @@ class ArticleProvider extends ChangeNotifier {
         try{
           Category category = CategoryModel.fromJson(dataList[i]).toEntity();
           addOrUpdateCategory(category);
-          await sharedPreferences.setString("category_"+dataList[i]["id"].toString(), jsonEncode(dataList[i]));
+          await sharedPreferences.setString("cat_"+dataList[i]["id"].toString(), jsonEncode(dataList[i]));
         }
         catch(exp,stackTrace){
           print("ArticleProvider->getRemoteCategory inner exp");
