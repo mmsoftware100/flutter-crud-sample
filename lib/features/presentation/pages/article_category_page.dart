@@ -28,6 +28,7 @@ class _ArticleCategoryPageState extends State<ArticleCategoryPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Container(width: double.infinity,),
         Text("No Category Available")
       ],
     );

@@ -49,10 +49,13 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
     setState(() {
       loading = true;
     });
+    //await Provider.of<ArticleProvider>(context, listen: false).notificationUpdate();
+
     await Provider.of<ArticleProvider>(context, listen: false).loadOfflineArticles();
     await Provider.of<ArticleProvider>(context, listen: false).loadOnlineArticles();
     await Provider.of<ArticleProvider>(context, listen: false).loadOfflineCategories();
     await Provider.of<ArticleProvider>(context, listen: false).loadRemoteCategories();
+
     Future.delayed(Duration(seconds: 3),(){
       setState(() {
         loading = false;
@@ -98,21 +101,29 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
     );
   }
   Widget _articleList(List<Article> articles){
-    if(articles.isEmpty && loading == true) return _loadingWidget();
-    if(articles.isEmpty) return _noArticleWidget();
+    //if(articles.isEmpty && loading == true) return _loadingWidget();
+    //if(articles.isEmpty) return _noArticleWidget();
 
     return Column(
       children: [
-        _reportCard(),
+        // Text("Hello"),
+        // _reportCard(),
+        Provider.of<ArticleProvider>(context,listen: true).notificationStatus ?  _reportCard() : Container(),
         Expanded(
-            child: ListView.separated(
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (context, index) => _articleThumbnail(articles[index]),
-                separatorBuilder: (context, index) => Divider(),
-                itemCount: articles.length
-            )
+            child: (articles.isEmpty && loading == true) ? _loadingWidget() : _mainArticleList(articles)
         )
       ],
+    );
+  }
+
+  Widget _mainArticleList(List<Article> articles){
+    if(articles.isEmpty) return _noArticleWidget();
+
+    return ListView.separated(
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, index) => _articleThumbnail(articles[index]),
+        separatorBuilder: (context, index) => Divider(),
+        itemCount: articles.length
     );
   }
 
@@ -130,14 +141,25 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
   }
 
   Widget _reportCard(){
-    return Container(
-      color: Colors.yellow,
-      child: Row(
-        children: [
-          SizedBox(height: 16.0, child: CircularProgressIndicator()),
-          CircularProgressIndicator(),
-          Text("Sync with server ...")
-        ],
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      color: Provider.of<ArticleProvider>(context,listen: true).notificationColor,
+      // color: Colors.green,
+      child: Container(
+        padding: EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0)
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //Provider.of<ArticleProvider>(context,listen: true).notificationStatus ?  SizedBox(height: 16.0,width: 16.0, child: CircularProgressIndicator(color: Colors.white,)) : Container(),
+            //Provider.of<ArticleProvider>(context,listen: true).notificationStatus ?  SizedBox(width: 8.0,) : Container(),
+            // Text("syncing with server",style: TextStyle(color: Colors.white)),
+            Text(Provider.of<ArticleProvider>(context,listen: true).notificationText + " ...", style: TextStyle(color: Colors.white),)
+          ],
+        ),
       ),
     );
   }

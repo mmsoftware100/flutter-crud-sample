@@ -27,6 +27,38 @@ class ArticleProvider extends ChangeNotifier {
   Article article = Article.sample;
   Category category = Category.sample;
 
+  // Notification Section
+  String notificationText = "Syncing...";
+  Color notificationColor = Colors.black;
+  bool notificationStatus = true;
+
+
+  Future<bool> notificationUpdate()async{
+    notificationText = "Sync started";
+    notificationColor = Colors.green;
+    notificationStatus = true;
+    notifyListeners();
+
+    Future.delayed(Duration(seconds: 5),(){
+      notificationText = "getting server data";
+      notificationColor = Colors.blue;
+      notifyListeners();
+      Future.delayed(Duration(seconds: 5),(){
+        notificationText = "completed";
+        notificationColor = Colors.green;
+        notifyListeners();
+        Future.delayed(Duration(seconds: 1),(){
+          notificationStatus = false;
+          notifyListeners();
+          return true;
+        });
+      });
+    });
+
+
+    return true;
+  }
+
 
   List<Article> getFavouriteArticles(){
     List<Article> favouriteArticles = [];
@@ -149,6 +181,11 @@ class ArticleProvider extends ChangeNotifier {
     //noOfArticleLocal = sharedPreferences.getInt(NUMBER_OF_ARTICLE) ?? 0;
     //String lastSyncTimeStringLocal = sharedPreferences.getString(LAST_SYNC_TIME) ?? "1969-07-20 20:18:04Z";
     //DateTime lastSyncTimeLocal = DateTime.tryParse(lastSyncTimeStringLocal) ?? DateTime.now();
+    notificationStatus = true;
+    notificationText = "ဆာဗာ မှာ ဆောင်းပါး ရှိ/မရှိ စစ်ဆေးနေပါသည်";
+    notificationColor = Colors.green;
+    notifyListeners();
+
 
     try{
       Config config = await _shouldSync();
@@ -159,12 +196,28 @@ class ArticleProvider extends ChangeNotifier {
       int currentPostNo = 0;
       print("ArticleProvider->loadOnlineArticles numberOfPost $numberOfPost updated at $lastUpdateTime");
       print(config.numberOfPost.toString() + " , " +config.lastUpdatedTime);
+
+      notificationText = "စစ်ဆေးပြီးပါပြီ";
+      notificationColor = Colors.blue;
+      notifyListeners();
+
+      notificationText = "ဆောင်းပါ ( ${config.numberOfPost} ရှိပါသည် ";
+      notificationColor = Colors.green;
+      notifyListeners();
+      
       if(config.lastUpdatedTime != lastUpdateTime || config.numberOfPost != numberOfPost){
         for(int i=1; i <= config.numberOfPost; i++){
+
+
+
           bool status = await _getArticleByIdFromRemote(i);
           if(status){
             currentPostNo++;
             print("currentPostNo is $currentPostNo");
+
+            notificationText = "ဆောင်းပါး ( $currentPostNo / ${config.numberOfPost} ) ရယူပြီးပါပြီ  ";
+            notificationColor = Colors.green;
+            notifyListeners();
           }
         }
         await sharedPreferences.setInt(NUMBER_OF_ARTICLE, currentPostNo);
@@ -172,6 +225,15 @@ class ArticleProvider extends ChangeNotifier {
       }
       else{
         print("already updated");
+
+        notificationText = "ဆောင်းပါး အသစ် မရှိသေးပါ";
+        notificationColor = Colors.red;
+        notifyListeners();
+
+        Future.delayed(Duration(seconds: 1),(){
+          notificationStatus = false;
+          notifyListeners();
+        });
       }
 
 
@@ -207,6 +269,15 @@ class ArticleProvider extends ChangeNotifier {
       print("LatestNewsRemoteDataSourceImpl->getLatestNews throw exception");
       print(exp);
       print(stackTrace);
+      notificationText = "အင်တာနက် ဖွင့်ပြီး ပြန်လည်ကြိုးစားကြည့်ပါ၊";
+      notificationColor = Colors.red;
+      notifyListeners();
+
+      Future.delayed(Duration(seconds: 1),(){
+        notificationStatus = false;
+        notifyListeners();
+      });
+
       return false;
     }
   }
