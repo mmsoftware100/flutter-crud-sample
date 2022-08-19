@@ -31,6 +31,7 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
     // _loadOffline();
   }
 
+  /*
   void _loadOffline()async{
     setState(() {
       loading = true;
@@ -42,6 +43,8 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
       });
     });
   }
+
+   */
   void _refresh() async{
     setState(() {
       loading = true;
@@ -97,11 +100,19 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
   Widget _articleList(List<Article> articles){
     if(articles.isEmpty && loading == true) return _loadingWidget();
     if(articles.isEmpty) return _noArticleWidget();
-    return ListView.separated(
-        physics: BouncingScrollPhysics(),
-        itemBuilder: (context, index) => _articleThumbnail(articles[index]),
-        separatorBuilder: (context, index) => Divider(),
-        itemCount: articles.length
+
+    return Column(
+      children: [
+        _reportCard(),
+        Expanded(
+            child: ListView.separated(
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, index) => _articleThumbnail(articles[index]),
+                separatorBuilder: (context, index) => Divider(),
+                itemCount: articles.length
+            )
+        )
+      ],
     );
   }
 
@@ -115,6 +126,19 @@ class _ArticleHomeListingPageState extends State<ArticleHomeListingPage> {
         SizedBox(height: 20,),
         _fab()
       ],
+    );
+  }
+
+  Widget _reportCard(){
+    return Container(
+      color: Colors.yellow,
+      child: Row(
+        children: [
+          SizedBox(height: 16.0, child: CircularProgressIndicator()),
+          CircularProgressIndicator(),
+          Text("Sync with server ...")
+        ],
+      ),
     );
   }
 
