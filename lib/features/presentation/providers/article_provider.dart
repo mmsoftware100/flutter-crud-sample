@@ -28,9 +28,9 @@ class ArticleProvider extends ChangeNotifier {
   Category category = Category.sample;
 
   // Notification Section
-  String notificationText = "Syncing...";
+  String notificationText = "";
   Color notificationColor = Colors.black;
-  bool notificationStatus = true;
+  bool notificationStatus = false;
 
 
   Future<bool> notificationUpdate()async{
@@ -201,7 +201,7 @@ class ArticleProvider extends ChangeNotifier {
       notificationColor = Colors.blue;
       notifyListeners();
 
-      notificationText = "ဆောင်းပါ ( ${config.numberOfPost} ရှိပါသည် ";
+      notificationText = "ဆောင်းပါ ( ${config.numberOfPost} ) ရှိပါသည် ";
       notificationColor = Colors.green;
       notifyListeners();
       
