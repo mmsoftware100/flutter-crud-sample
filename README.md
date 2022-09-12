@@ -1,5 +1,10 @@
 ### Flutter CRUD Sample
 
+### 2022-09-12
+- [ ] FCM
+- [ ] Local Notification, daily random notification
+- [ ] Remote data update, we send id and device get id.json and stored, use can read 
+- [ ] Admob for banner and intrestitial , native ads
 
 ### 2022-08-19
 
